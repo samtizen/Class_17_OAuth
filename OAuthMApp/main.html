@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Tizen Mobile Web Basic Template" />
+
+    <title>Tizen Mobile Web Basic Application</title>
+    
+    <link rel="stylesheet" href="lib/tau/mobile/theme/default/tau.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    
+    <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "YOUR",
+        authDomain: "YOUR"
+    };
+    firebase.initializeApp(config);
+    </script>
+    <script type="text/javascript">
+		initApp = function() {
+		  firebase.auth().onAuthStateChanged(function(user) {
+		    if (user) {
+		      // User is signed in.
+		      var displayName = user.displayName;
+		      var email = user.email;
+		      var emailVerified = user.emailVerified;
+		      var photoURL = user.photoURL;
+		      var uid = user.uid;
+		      var providerData = user.providerData;
+		      user.getToken().then(function(accessToken) {
+		        document.getElementById('sign-in-status').textContent = 'Signed in';
+		        document.getElementById('sign-in').textContent = 'Sign out';
+		        document.getElementById('account-details').textContent = JSON.stringify({
+		          displayName: displayName,
+		          email: email,
+		          emailVerified: emailVerified,
+		          photoURL: photoURL,
+		          uid: uid,
+		          accessToken: accessToken,
+		          providerData: providerData
+		        }, null, '  ');
+		      });
+		
+		      //user.sendEmailVerification();
+		      
+		    } else {
+		      // User is signed out.
+		      document.getElementById('sign-in-status').textContent = 'Signed out';
+		      document.getElementById('sign-in').textContent = 'Sign in';
+		      document.getElementById('account-details').textContent = 'null';
+		    }
+		  }, function(error) {
+		    console.log(error);
+		  });
+		};
+		
+		window.addEventListener('load', function() {
+		  initApp()
+		});
+
+		function singOut() {		
+	      firebase.auth().signOut().then(function() {
+		      	console.log("log out success")
+	    	  	// Sign-out successful.
+	    	}, function(error) {
+	    	  	// An error happened.
+		    	console.log("error");
+	    	});
+		}
+    </script>
+  </head>
+  <body>
+  	<div class="ui-page ui-page-active" id="bluetooth-viewer-main" data-enable-page-scroll="true">
+        <div class="ui-header">
+            <h1>Log in Successfully</h1>
+        </div>
+        <div class="ui-content">
+			<a href="index.html" onclick="singOut();">Sing Out</a>
+		    <div id="sign-in-status"></div>
+		    <div id="sign-in"></div>
+		    <div id="account-details" style="font-size:12px;"></div>
+        </div>
+
+    </div>
+  	
+    <script type="text/javascript" src="lib/tau/mobile/js/tau.js"></script>
+    <script type="text/javascript" src="lib/jquery.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>

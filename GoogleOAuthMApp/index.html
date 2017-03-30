@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Tizen Mobile Web Basic Template" />
+
+    <title>Tizen Mobile Web Basic Application</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script type="text/javascript" src="lib/tau/mobile/js/tau.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+		function mobileInit() {
+
+			var url = "https://accounts.google.com/o/oauth2/v2/auth";
+			var client_id = "YOUR";
+			var redirect_uri = "urn:ietf:wg:oauth:2.0:oob";//"http://localhost";
+			var response_type = "code";
+			var scope = "profile";
+
+			var full_url = url + "?" + 'client_id=' + encodeURIComponent(client_id) + '&redirect_uri=' + encodeURIComponent(redirect_uri)
+   							+ '&response_type=' + encodeURIComponent(response_type) + '&scope=' + encodeURIComponent(scope);
+			
+
+			var win = window.open(full_url);
+
+			var code = null;
+			
+			var codeRequest = window.setInterval(function() { 
+
+                		if (win.document.URL.indexOf("approval") != -1) {
+                    		
+                		    clearInterval(codeRequest);
+							
+							code = $(win.document).find("#code").val()
+							console.log(code);
+							
+                			win.close();
+                    	}
+
+						if (!win) {
+						    clearInterval(codeRequest);
+							}
+			}, 100);	
+			
+		}
+</script>
+</head>
+
+<body>
+    <div id="main" class="page">
+        <div class="contents">
+            <button onclick="mobileInit();">click</button>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        gapi.load('client:auth2:signin2', init1);
+    </script>
+
+</body>
+
+</html>
